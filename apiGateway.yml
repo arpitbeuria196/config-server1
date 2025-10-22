@@ -2,36 +2,37 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: apiGateway
-
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      routes:
-        - id: userservice
-          uri: lb://userservice
-          predicates:
-            - Path=/api/user/**
-          filters:
-            - StripPrefix=2
+      server:
+        webflux:
+          routes:
+            - id: userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/api/user/**
+              filters:
+                - StripPrefix=2
 
-        - id: activity
-          uri: lb://activity
-          predicates:
-            - Path=/api/activity/**
-          filters:
-            - StripPrefix=2
+            - id: activity
+              uri: lb://activity
+              predicates:
+                - Path=/api/activity/**
+              filters:
+                - StripPrefix=2
 
-        - id: activity_ai
-          uri: lb://activity_ai
-          predicates:
-            - Path=/api/ai/**
-          filters:
-            - StripPrefix=2
+            - id: activity-ai
+              uri: lb://activity-ai
+              predicates:
+                - Path=/api/ai/**
+              filters:
+                - StripPrefix=2
+
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
 
 eureka:
   client:
