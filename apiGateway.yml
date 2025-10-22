@@ -1,21 +1,34 @@
-spring.application.name=apiGateway
+server:
+  port: 8080
 
-server.port=8080
+spring:
+  application:
+    name: apiGateway
 
-eureka.client.enabled=false
+  cloud:
+    gateway:
+      routes:
+        - id: userservice
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=2
 
-spring.cloud.gateway.routes[0].id=userservice
-spring.cloud.gateway.routes[0].uri=http://localhost:8081
-spring.cloud.gateway.routes[0].predicates[0]=Path=/api/user/**
-spring.cloud.gateway.routes[0].filters[0]=StripPrefix=2
+        - id: activity
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/activity/**
+          filters:
+            - StripPrefix=2
 
+        - id: activity_AI
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/ai/**
+          filters:
+            - StripPrefix=2
 
-
-spring.cloud.gateway.routes[1].id=activity
-spring.cloud.gateway.routes[1].uri=http://localhost:8082
-spring.cloud.gateway.routes[1].predicates[0]=Path=/api/activity/**
-
-spring.cloud.gateway.routes[2].id=activity_AI
-spring.cloud.gateway.routes[2].uri=http://localhost:8083
-spring.cloud.gateway.routes[2].predicates[0]=Path=/api/ai/**
-
+eureka:
+  client:
+    enabled: false
