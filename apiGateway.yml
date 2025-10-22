@@ -10,6 +10,11 @@ server:
 spring:
   application:
     name: apiGateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: my-super-secret-key-for-jwt-authentication-2025
 
   cloud:
     gateway:
