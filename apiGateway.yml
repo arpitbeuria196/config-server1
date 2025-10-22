@@ -1,40 +1,43 @@
+#spring:
+#  application:
+#    name: apiGateway
+#  config:
+#    import:
+#      - optional:configserver:http://localhost:8888
 server:
   port: 8080
 
 spring:
+  application:
+    name: apiGateway
+
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: userservice
-              uri: lb://userservice
-              predicates:
-                - Path=/api/user/**
-              filters:
-                - StripPrefix=2
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 
-            - id: activity
-              uri: lb://activity
-              predicates:
-                - Path=/api/activity/**
-              filters:
-                - StripPrefix=2
-
-            - id: activity-ai
-              uri: lb://activity-ai
-              predicates:
-                - Path=/api/ai/**
-              filters:
-                - StripPrefix=2
-
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
-
+      # Optional manual routes (you can remove if discovery locator works fine)
+      routes:
+        - id: userservice
+          uri: lb://userservice
+          predicates:
+            - Path=/api/user/**
+        - id: activity
+          uri: lb://activity
+          predicates:
+            - Path=/api/activity/**
+        - id: activity-ai
+          uri: lb://activity-ai
+          predicates:
+            - Path=/api/ai/**
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
